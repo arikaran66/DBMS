@@ -1,0 +1,459 @@
+urrent Mongosh Log ID:  69f1050740bcd046723682d0
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.8.2
+Using MongoDB:          8.2.7
+Using Mongosh:          2.8.2
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2026-04-28T23:43:41.711+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> use medicialshop
+switched to db medicialshop
+
+medicialshop> db.MEDICINE.insertOne({
+|   medicine_id: 101,
+|   cat_id: 1,
+|   medicine_name: "Paracetamol",
+|   medicine_brand: "Dolo 650",
+|   unitsize: 10,
+|   mrp: 35,
+|   gst: 5,
+|   selling_price: 33,
+|   prescription_required: "No"
+| });
+{
+  acknowledged: true,
+  insertedId: ObjectId('69f105e5cf71e6bb4f3682d1')
+}
+medicialshop> db.MEDICINE.insertMany([
+| {
+|   medicine_id: 102,
+|   cat_id: 2,
+|   medicine_name: "Amoxicillin",
+|   medicine_brand: "Mox 500",
+|   unitsize: 15,
+|   mrp: 120,
+|   gst: 12,
+|   selling_price: 110,
+|   prescription_required: "Yes"
+| },
+| {
+|   medicine_id: 103,
+|   cat_id: 3,
+|   medicine_name: "Cetirizine",
+|   medicine_brand: "Cetzine",
+|   unitsize: 10,
+|   mrp: 45,
+|   gst: 5,
+|   selling_price: 42,
+|   prescription_required: "No"
+| },
+| {
+|   medicine_id: 104,
+|   cat_id: 4,
+|   medicine_name: "Vitamin C",
+|   medicine_brand: "Limcee",
+|   unitsize: 20,
+|   mrp: 90,
+|   gst: 5,
+|   selling_price: 85,
+|   prescription_required: "No"
+| }
+| ]);
+|
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69f105f7cf71e6bb4f3682d2'),
+    '1': ObjectId('69f105f7cf71e6bb4f3682d3'),
+    '2': ObjectId('69f105f7cf71e6bb4f3682d4')
+  }
+}
+medicialshop> db.MEDICINE.updateOne(
+|  { medicine_id: 101 },
+|  {
+|    $set: {
+|      medicine_brand: "Dolo 650 Tablet",
+|      selling_price: 30
+|    }
+|  }
+| );
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+medicialshop> db.MEDICINE.updateOne(
+|  { medicine_id: 101 },
+|  {
+|    $rename: { "unitsize": "unit_size" }
+|  }
+| );
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+medicialshop> db.MEDICINE.replaceOne(
+|  { medicine_id: 101 },
+|  {
+|    medicine_id: 101,
+|    cat_id: 3,
+|    medicine_name: "Cetirizine",
+|    medicine_brand: "Cetzine",
+|    unitsize: 10,
+|    mrp: 45,
+|    gst: 5,
+|    selling_price: 42,
+|    prescription_required: "No"
+|  }
+| );
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+medicialshop> db.MEDICINE.find();
+[
+  {
+    _id: ObjectId('69f105e5cf71e6bb4f3682d1'),
+    medicine_id: 101,
+    cat_id: 3,
+    medicine_name: 'Cetirizine',
+    medicine_brand: 'Cetzine',
+    unitsize: 10,
+    mrp: 45,
+    gst: 5,
+    selling_price: 42,
+    prescription_required: 'No'
+  },
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d2'),
+    medicine_id: 102,
+    cat_id: 2,
+    medicine_name: 'Amoxicillin',
+    medicine_brand: 'Mox 500',
+    unitsize: 15,
+    mrp: 120,
+    gst: 12,
+    selling_price: 110,
+    prescription_required: 'Yes'
+  },
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d3'),
+    medicine_id: 103,
+    cat_id: 3,
+    medicine_name: 'Cetirizine',
+    medicine_brand: 'Cetzine',
+    unitsize: 10,
+    mrp: 45,
+    gst: 5,
+    selling_price: 42,
+    prescription_required: 'No'
+  },
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d4'),
+    medicine_id: 104,
+    cat_id: 4,
+    medicine_name: 'Vitamin C',
+    medicine_brand: 'Limcee',
+    unitsize: 20,
+    mrp: 90,
+    gst: 5,
+    selling_price: 85,
+    prescription_required: 'No'
+  }
+]
+medicialshop> db.MEDICINE.find({ medicine_id: 101 });
+[
+  {
+    _id: ObjectId('69f105e5cf71e6bb4f3682d1'),
+    medicine_id: 101,
+    cat_id: 3,
+    medicine_name: 'Cetirizine',
+    medicine_brand: 'Cetzine',
+    unitsize: 10,
+    mrp: 45,
+    gst: 5,
+    selling_price: 42,
+    prescription_required: 'No'
+  }
+]
+medicialshop> db.MEDICINE.find({
+|  $or: [
+|    { prescription_required: "Yes" },
+|    { selling_price: { $gt: 80 } }
+|  ]
+| });
+[
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d2'),
+    medicine_id: 102,
+    cat_id: 2,
+    medicine_name: 'Amoxicillin',
+    medicine_brand: 'Mox 500',
+    unitsize: 15,
+    mrp: 120,
+    gst: 12,
+    selling_price: 110,
+    prescription_required: 'Yes'
+  },
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d4'),
+    medicine_id: 104,
+    cat_id: 4,
+    medicine_name: 'Vitamin C',
+    medicine_brand: 'Limcee',
+    unitsize: 20,
+    mrp: 90,
+    gst: 5,
+    selling_price: 85,
+    prescription_required: 'No'
+  }
+]
+medicialshop> db.MEDICINE.find({ medicine_id: { $gt: 102 } });
+|
+| db.MEDICINE.find({ medicine_id: { $lt: 103 } });
+[
+  {
+    _id: ObjectId('69f105e5cf71e6bb4f3682d1'),
+    medicine_id: 101,
+    cat_id: 3,
+    medicine_name: 'Cetirizine',
+    medicine_brand: 'Cetzine',
+    unitsize: 10,
+    mrp: 45,
+    gst: 5,
+    selling_price: 42,
+    prescription_required: 'No'
+  },
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d2'),
+    medicine_id: 102,
+    cat_id: 2,
+    medicine_name: 'Amoxicillin',
+    medicine_brand: 'Mox 500',
+    unitsize: 15,
+    mrp: 120,
+    gst: 12,
+    selling_price: 110,
+    prescription_required: 'Yes'
+  }
+]
+medicialshop> db.MEDICINE.find({ medicine_id: { $gt: 102 } });
+[
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d3'),
+    medicine_id: 103,
+    cat_id: 3,
+    medicine_name: 'Cetirizine',
+    medicine_brand: 'Cetzine',
+    unitsize: 10,
+    mrp: 45,
+    gst: 5,
+    selling_price: 42,
+    prescription_required: 'No'
+  },
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d4'),
+    medicine_id: 104,
+    cat_id: 4,
+    medicine_name: 'Vitamin C',
+    medicine_brand: 'Limcee',
+    unitsize: 20,
+    mrp: 90,
+    gst: 5,
+    selling_price: 85,
+    prescription_required: 'No'
+  }
+]
+medicialshop> db.MEDICINE.find({ medicine_id: { $lt: 103 } });
+[
+  {
+    _id: ObjectId('69f105e5cf71e6bb4f3682d1'),
+    medicine_id: 101,
+    cat_id: 3,
+    medicine_name: 'Cetirizine',
+    medicine_brand: 'Cetzine',
+    unitsize: 10,
+    mrp: 45,
+    gst: 5,
+    selling_price: 42,
+    prescription_required: 'No'
+  },
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d2'),
+    medicine_id: 102,
+    cat_id: 2,
+    medicine_name: 'Amoxicillin',
+    medicine_brand: 'Mox 500',
+    unitsize: 15,
+    mrp: 120,
+    gst: 12,
+    selling_price: 110,
+    prescription_required: 'Yes'
+  }
+]
+medicialshop> db.MEDICINE.find({
+|  medicine_brand: { $in: ["Dolo 650", "Limcee"] }
+| });
+|
+[
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d4'),
+    medicine_id: 104,
+    cat_id: 4,
+    medicine_name: 'Vitamin C',
+    medicine_brand: 'Limcee',
+    unitsize: 20,
+    mrp: 90,
+    gst: 5,
+    selling_price: 85,
+    prescription_required: 'No'
+  }
+]
+medicialshop> db.MEDICINE.find({
+|  medicine_brand: { $nin: ["Dolo 650", "Limcee"] }
+| });
+[
+  {
+    _id: ObjectId('69f105e5cf71e6bb4f3682d1'),
+    medicine_id: 101,
+    cat_id: 3,
+    medicine_name: 'Cetirizine',
+    medicine_brand: 'Cetzine',
+    unitsize: 10,
+    mrp: 45,
+    gst: 5,
+    selling_price: 42,
+    prescription_required: 'No'
+  },
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d2'),
+    medicine_id: 102,
+    cat_id: 2,
+    medicine_name: 'Amoxicillin',
+    medicine_brand: 'Mox 500',
+    unitsize: 15,
+    mrp: 120,
+    gst: 12,
+    selling_price: 110,
+    prescription_required: 'Yes'
+  },
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d3'),
+    medicine_id: 103,
+    cat_id: 3,
+    medicine_name: 'Cetirizine',
+    medicine_brand: 'Cetzine',
+    unitsize: 10,
+    mrp: 45,
+    gst: 5,
+    selling_price: 42,
+    prescription_required: 'No'
+  }
+]
+medicialshop> db.MEDICINE.find().sort({ medicine_id: -1 });
+[
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d4'),
+    medicine_id: 104,
+    cat_id: 4,
+    medicine_name: 'Vitamin C',
+    medicine_brand: 'Limcee',
+    unitsize: 20,
+    mrp: 90,
+    gst: 5,
+    selling_price: 85,
+    prescription_required: 'No'
+  },
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d3'),
+    medicine_id: 103,
+    cat_id: 3,
+    medicine_name: 'Cetirizine',
+    medicine_brand: 'Cetzine',
+    unitsize: 10,
+    mrp: 45,
+    gst: 5,
+    selling_price: 42,
+    prescription_required: 'No'
+  },
+  {
+    _id: ObjectId('69f105f7cf71e6bb4f3682d2'),
+    medicine_id: 102,
+    cat_id: 2,
+    medicine_name: 'Amoxicillin',
+    medicine_brand: 'Mox 500',
+    unitsize: 15,
+    mrp: 120,
+    gst: 12,
+    selling_price: 110,
+    prescription_required: 'Yes'
+  },
+  {
+    _id: ObjectId('69f105e5cf71e6bb4f3682d1'),
+    medicine_id: 101,
+    cat_id: 3,
+    medicine_name: 'Cetirizine',
+    medicine_brand: 'Cetzine',
+    unitsize: 10,
+    mrp: 45,
+    gst: 5,
+    selling_price: 42,
+    prescription_required: 'No'
+  }
+]
+medicialshop> db.MEDICINE.aggregate([
+| {
+|  $group: {
+|    _id: "$prescription_required",
+|    total_medicines: { $sum: 1 }
+|  }
+| }
+| ]);
+[
+  { _id: 'Yes', total_medicines: 1 },
+  { _id: 'No', total_medicines: 3 }
+]
+medicialshop> db.MEDICINE.aggregate([
+| {
+|  $group: {
+|    _id: "$cat_id",
+|    total: { $sum: 1 },
+|    max_price: { $max: "$selling_price" },
+|    min_price: { $min: "$selling_price" }
+|  }
+| }
+| ]);
+[
+  { _id: 4, total: 1, max_price: 85, min_price: 85 },
+  { _id: 3, total: 2, max_price: 42, min_price: 42 },
+  { _id: 2, total: 1, max_price: 110, min_price: 110 }
+]
+
+medicialshop> db.MEDICINE.deleteOne({ medicine_id: 104 });
+{
+  acknowledged: true,
+  deletedCount: 1
+}
+medicialshop> db.MEDICINE.deleteMany({ prescription_required: "Yes" });
+{
+  acknowledged: true,
+  deletedCount: 1
+}
+medicialshop> db.MEDICINE.deleteMany({});
+{
+  acknowledged: true,
+  deletedCount: 2
+}
+medicialshop> exit
